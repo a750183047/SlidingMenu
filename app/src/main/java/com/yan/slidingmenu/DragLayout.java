@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
- *
  * Created by a7501 on 2016/3/27.
  */
 public class DragLayout extends FrameLayout {
@@ -71,17 +70,39 @@ public class DragLayout extends FrameLayout {
         public int clampViewPositionHorizontal(View child, int left, int dx) {
             // child  当前拖拽的 View
             //left  新的位置的建议值  dx 位置变化量
+
+            if (child == mMainContent) {
+                left = fixLeft(left);
+            }
             return left;
         }
+
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             return super.clampViewPositionVertical(child, top, dy);
         }
 
+
+        // 3 当 View 位置改变的时候 处理要做的事情 （更新状态 伴随动画 重绘界面等）
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
+
+            int newLeft = left;
+            if (changedView == mLiftContent) {
+                //把当前值变化量 传递给 mMainContent
+                newLeft = mMainContent.getLeft() + dx;
+            }
+            //进行修正
+            newLeft = fixLeft(newLeft);
+
+            if (changedView == mLiftContent) {
+                //当 左面板移动之后 在强制放回去
+                mLiftContent.layout(0, 0, mWidth, mHight);
+                mMainContent.layout(newLeft,0,newLeft+mWidth,mHight);
+            }
+
             //为了兼容低版本，每次修改值之后  进行重绘
             invalidate();
         }
@@ -108,11 +129,11 @@ public class DragLayout extends FrameLayout {
         super.onFinishInflate();
 
         //容错性检查
-        if (getChildCount() <2){
+        if (getChildCount() < 2) {
             throw new IllegalStateException("布局中至少要有两个子布局");  //异常状态
         }
-        if (!(getChildAt(0) instanceof ViewGroup && getChildAt(1) instanceof ViewGroup)){
-            throw  new IllegalArgumentException("子布局必须是ViewGroup的子类");  //异常参数
+        if (!(getChildAt(0) instanceof ViewGroup && getChildAt(1) instanceof ViewGroup)) {
+            throw new IllegalArgumentException("子布局必须是ViewGroup的子类");  //异常参数
         }
         mLiftContent = (ViewGroup) getChildAt(0);
         mMainContent = (ViewGroup) getChildAt(1);
@@ -127,6 +148,21 @@ public class DragLayout extends FrameLayout {
         mHight = getMeasuredHeight();
         mWidth = getMeasuredWidth();
 
-        mRange = (int) (0.6 *mWidth);
+        mRange = (int) (0.6 * mWidth);
+    }
+
+    /**
+     * 根据范围修正左边的值
+     *
+     * @param left
+     * @return
+     */
+    private int fixLeft(int left) {
+        if (left < 0) {
+            return 0;
+        } else if (left > mRange) {
+            return mRange;
+        }
+        return left;
     }
 }
