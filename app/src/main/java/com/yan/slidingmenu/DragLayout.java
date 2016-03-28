@@ -1,6 +1,8 @@
 package com.yan.slidingmenu;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -144,12 +146,29 @@ public class DragLayout extends FrameLayout {
         }
     };
 
+
+    /***
+     * 伴随动画
+     * @param newLeft
+     */
     private void dispatchDragEvent(int newLeft) {
         float percent = newLeft * 1.0f / mRange;
 
-        mLiftContent.setScaleX(0.5f + 0.5f * percent);
+        //左面板
+        //缩放动画
+        mLiftContent.setScaleX(evaluate(percent,0.5f,1.0f));
         mLiftContent.setScaleY(0.5f + 0.5f * percent);
-
+        //平移动画
+        mLiftContent.setTranslationX(evaluate(percent,-mWidth/ 2.0f,0));
+        //透明度
+        mLiftContent.setAlpha(evaluate(percent,0.5f,1.0f));
+        //主面板
+        //缩放动画
+        mMainContent.setScaleX(evaluate(percent,1.0f,0.8f));
+        mMainContent.setScaleY(evaluate(percent, 1.0f, 0.8f));
+        //背景动画  颜色渐变
+        getBackground().setColorFilter((Integer) evaluateColor(percent, Color.BLACK,Color.TRANSPARENT),
+                PorterDuff.Mode.SRC_OVER);
     }
 
     /***
@@ -245,5 +264,42 @@ public class DragLayout extends FrameLayout {
             ViewCompat.postInvalidateOnAnimation(this);
         }
 
+    }
+
+    /**
+     * 估值器
+     * @param fraction
+     * @param startValue
+     * @param endValue
+     * @return
+     */
+    public Float evaluate(float fraction, Number startValue, Number endValue) {
+        float startFloat = startValue.floatValue();
+        return startFloat + fraction * (endValue.floatValue() - startFloat);
+    }
+    /**
+     * 颜色变化过度
+     * @param fraction
+     * @param startValue
+     * @param endValue
+     * @return
+     */
+    public Object evaluateColor(float fraction, Object startValue, Object endValue) {
+        int startInt = (Integer) startValue;
+        int startA = (startInt >> 24) & 0xff;
+        int startR = (startInt >> 16) & 0xff;
+        int startG = (startInt >> 8) & 0xff;
+        int startB = startInt & 0xff;
+
+        int endInt = (Integer) endValue;
+        int endA = (endInt >> 24) & 0xff;
+        int endR = (endInt >> 16) & 0xff;
+        int endG = (endInt >> 8) & 0xff;
+        int endB = endInt & 0xff;
+
+        return (int)((startA + (int)(fraction * (endA - startA))) << 24) |
+                (int)((startR + (int)(fraction * (endR - startR))) << 16) |
+                (int)((startG + (int)(fraction * (endG - startG))) << 8) |
+                (int)((startB + (int)(fraction * (endB - startB))));
     }
 }

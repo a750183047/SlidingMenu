@@ -17,13 +17,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8bd427df-5ea2-4051-9f03-1701b6de3d76" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/library_1_0_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/DragLayout.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/DragLayout.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SlidingMenu.iws" />
@@ -88,14 +82,14 @@
       <file leaf-file-name="DragLayout.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/DragLayout.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.68804157">
-              <caret line="244" column="53" selection-start-line="244" selection-start-column="53" selection-end-line="244" selection-end-column="53" />
+            <state vertical-scroll-proportion="0.5320624">
+              <caret line="170" column="16" selection-start-line="170" selection-start-column="16" selection-end-line="170" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#665#666#0" expanded="true" />
-                <element signature="e#700#701#0" expanded="true" />
-                <element signature="e#762#763#0" expanded="true" />
-                <element signature="e#801#802#0" expanded="true" />
+                <element signature="e#732#733#0" expanded="true" />
+                <element signature="e#767#768#0" expanded="true" />
+                <element signature="e#829#830#0" expanded="true" />
+                <element signature="e#868#869#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2026,7 +2020,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32516703" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32516703" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -2101,10 +2095,10 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#665#666#0" expanded="true" />
-            <element signature="e#700#701#0" expanded="true" />
-            <element signature="e#762#763#0" expanded="true" />
-            <element signature="e#801#802#0" expanded="true" />
+            <element signature="e#732#733#0" expanded="true" />
+            <element signature="e#767#768#0" expanded="true" />
+            <element signature="e#829#830#0" expanded="true" />
+            <element signature="e#868#869#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2197,14 +2191,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/yan/slidingmenu/DragLayout.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.68804157">
-          <caret line="244" column="53" selection-start-line="244" selection-start-column="53" selection-end-line="244" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.5320624">
+          <caret line="170" column="16" selection-start-line="170" selection-start-column="16" selection-end-line="170" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#665#666#0" expanded="true" />
-            <element signature="e#700#701#0" expanded="true" />
-            <element signature="e#762#763#0" expanded="true" />
-            <element signature="e#801#802#0" expanded="true" />
+            <element signature="e#732#733#0" expanded="true" />
+            <element signature="e#767#768#0" expanded="true" />
+            <element signature="e#829#830#0" expanded="true" />
+            <element signature="e#868#869#0" expanded="true" />
           </folding>
         </state>
       </provider>
