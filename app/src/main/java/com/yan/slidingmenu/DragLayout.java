@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
- *
+ * 00
  * Created by a7501 on 2016/3/27.
  */
 public class DragLayout extends FrameLayout {
@@ -24,8 +24,33 @@ public class DragLayout extends FrameLayout {
     private int mWidth;
     private int mHight;
     private int mRange;
+    private OnDragStatusChangeListener mListener;
+    private Status mStatus = Status.Close;
 
     private boolean once = true;
+
+    /***
+     * 状态枚举
+     */
+    public static enum Status{
+        Close,Open,Draging;
+    }
+
+    public interface OnDragStatusChangeListener{
+        void onClose();
+        void onOpen();
+        void onDraging(float percent);
+    }
+
+    public void setDragStatusListener(OnDragStatusChangeListener mListener){
+        this.mListener = mListener;
+    }
+    public Status getStatus(){
+        return mStatus;
+    }
+    public void setStatus(Status mStatus) {
+        this.mStatus = mStatus;
+    }
 
     public DragLayout(Context context) {
         this(context, null);
@@ -97,11 +122,11 @@ public class DragLayout extends FrameLayout {
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
-            if (changedView == mMainContent) {
-                if (once)
-                    mMainContent.layout(0, 0, mWidth, mHight);
-                once = false;
-            }
+//            if (changedView == mMainContent) {
+//                if (once)
+//                    mMainContent.layout(0, 0, mWidth, mHight);
+//                once = false;
+//            }
 
             int newLeft = left;
             if (changedView == mLiftContent) {
@@ -149,25 +174,74 @@ public class DragLayout extends FrameLayout {
 
     /***
      * 伴随动画
+     *
      * @param newLeft
      */
     private void dispatchDragEvent(int newLeft) {
         float percent = newLeft * 1.0f / mRange;
 
+        if (mListener != null){
+            mListener.onDraging(percent);
+        }
+        //更新状态  执行回调
+        Status preStatus  = mStatus;
+        mStatus = updateStatus(percent);
+        if (mStatus != preStatus){
+            //状态发生变化
+            if (mStatus == Status.Close){
+                //当前状态为关闭
+                if (mListener != null){
+                    mListener.onClose();
+                }
+            }else if (mStatus == Status.Open){
+                //当前状态为开
+                if (mListener != null){
+                    mListener.onOpen();
+                }
+            }
+        }
+
+        /**
+         * 伴随动画
+         */
+        animViews(percent);
+
+
+    }
+
+    /**
+     * 更新状态
+     * @param percent
+     * @return
+     */
+    private Status updateStatus(float percent) {
+        if (percent == 0f){
+            return Status.Close;
+        }else if (percent == 1.0f) {
+            return Status.Open;
+        }
+        return Status.Draging;
+    }
+
+    /***
+     * 伴随动画
+     * @param percent
+     */
+    private void animViews(float percent) {
         //左面板
         //缩放动画
-        mLiftContent.setScaleX(evaluate(percent,0.5f,1.0f));
+        mLiftContent.setScaleX(evaluate(percent, 0.5f, 1.0f));
         mLiftContent.setScaleY(0.5f + 0.5f * percent);
         //平移动画
-        mLiftContent.setTranslationX(evaluate(percent,-mWidth/ 2.0f,0));
+        mLiftContent.setTranslationX(evaluate(percent, -mWidth / 2.0f, 0));
         //透明度
-        mLiftContent.setAlpha(evaluate(percent,0.5f,1.0f));
+        mLiftContent.setAlpha(evaluate(percent, 0.5f, 1.0f));
         //主面板
         //缩放动画
-        mMainContent.setScaleX(evaluate(percent,1.0f,0.8f));
+        mMainContent.setScaleX(evaluate(percent, 1.0f, 0.8f));
         mMainContent.setScaleY(evaluate(percent, 1.0f, 0.8f));
         //背景动画  颜色渐变
-        getBackground().setColorFilter((Integer) evaluateColor(percent, Color.BLACK,Color.TRANSPARENT),
+        getBackground().setColorFilter((Integer) evaluateColor(percent, Color.BLACK, Color.TRANSPARENT),
                 PorterDuff.Mode.SRC_OVER);
     }
 
@@ -259,7 +333,7 @@ public class DragLayout extends FrameLayout {
     @Override
     public void computeScroll() {
         //持续平滑动画
-        if (mDragHelper.continueSettling(true)){
+        if (mDragHelper.continueSettling(true)) {
             //如果返回 true 动画还需要继续执行
             ViewCompat.postInvalidateOnAnimation(this);
         }
@@ -268,6 +342,7 @@ public class DragLayout extends FrameLayout {
 
     /**
      * 估值器
+     *
      * @param fraction
      * @param startValue
      * @param endValue
@@ -277,8 +352,10 @@ public class DragLayout extends FrameLayout {
         float startFloat = startValue.floatValue();
         return startFloat + fraction * (endValue.floatValue() - startFloat);
     }
+
     /**
      * 颜色变化过度
+     *
      * @param fraction
      * @param startValue
      * @param endValue
@@ -297,9 +374,9 @@ public class DragLayout extends FrameLayout {
         int endG = (endInt >> 8) & 0xff;
         int endB = endInt & 0xff;
 
-        return (int)((startA + (int)(fraction * (endA - startA))) << 24) |
-                (int)((startR + (int)(fraction * (endR - startR))) << 16) |
-                (int)((startG + (int)(fraction * (endG - startG))) << 8) |
-                (int)((startB + (int)(fraction * (endB - startB))));
+        return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
+                (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
+                (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
+                (int) ((startB + (int) (fraction * (endB - startB))));
     }
 }
