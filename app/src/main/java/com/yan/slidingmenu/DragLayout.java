@@ -1,6 +1,7 @@
 package com.yan.slidingmenu;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
+ *
  * Created by a7501 on 2016/3/27.
  */
 public class DragLayout extends FrameLayout {
@@ -21,6 +23,8 @@ public class DragLayout extends FrameLayout {
     private int mHight;
     private int mRange;
 
+    private boolean once = true;
+
     public DragLayout(Context context) {
         this(context, null);
     }
@@ -31,6 +35,7 @@ public class DragLayout extends FrameLayout {
 
     public DragLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
 
         //1 初始化 通过静态方法
         mDragHelper = ViewDragHelper.create(this, mCallback);
@@ -54,6 +59,7 @@ public class DragLayout extends FrameLayout {
         public void onViewCaptured(View capturedChild, int activePointerId) {
             //当 capturedChild被捕获时 调用
             super.onViewCaptured(capturedChild, activePointerId);
+
 
         }
 
@@ -89,6 +95,12 @@ public class DragLayout extends FrameLayout {
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
+            if (changedView == mMainContent) {
+                if (once)
+                    mMainContent.layout(0, 0, mWidth, mHight);
+                once = false;
+            }
+
             int newLeft = left;
             if (changedView == mLiftContent) {
                 //把当前值变化量 传递给 mMainContent
@@ -100,13 +112,71 @@ public class DragLayout extends FrameLayout {
             if (changedView == mLiftContent) {
                 //当 左面板移动之后 在强制放回去
                 mLiftContent.layout(0, 0, mWidth, mHight);
-                mMainContent.layout(newLeft,0,newLeft+mWidth,mHight);
+                mMainContent.layout(newLeft, 0, newLeft + mWidth, mHight);
             }
 
+            dispatchDragEvent(newLeft);
             //为了兼容低版本，每次修改值之后  进行重绘
-            invalidate();
+            // invalidate();
+        }
+
+
+        /**
+         *  //当View 被释放的时候 处理的事情 （执行动画）
+         * @param releasedChild     被释放的子View
+         * @param xvel              水平方向的速度  释放前拖动的速度
+         * @param yvel              竖直方向的速度
+         */
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+
+            super.onViewReleased(releasedChild, xvel, yvel);
+
+            //判断速度来选择关闭或者打开
+            //先判断所有打开的情况
+            if (xvel == 0 && mMainContent.getLeft() > mRange / 2.0f) {
+                open();
+            } else if (xvel > 0) {
+                open();
+            } else {
+                close();
+            }
         }
     };
+
+    private void dispatchDragEvent(int newLeft) {
+        float percent = newLeft * 1.0f / mRange;
+
+        mLiftContent.setScaleX(0.5f + 0.5f * percent);
+        mLiftContent.setScaleY(0.5f + 0.5f * percent);
+
+    }
+
+    /***
+     * 关闭侧边栏
+     */
+    public void close() {
+        int finalLeft = 0;
+        //触发一个平滑动画
+        if (mDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        } else {
+            mMainContent.layout(finalLeft, 0, finalLeft + mWidth, 0 + mHight);
+        }
+
+    }
+
+    /***
+     * 打开侧边栏
+     */
+    public void open() {
+        int finalLeft = mRange;
+        if (mDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        } else {
+            mMainContent.layout(finalLeft, 0, finalLeft + mWidth, 0 + mHight);
+        }
+    }
     //2 传递触摸事件
 
     @Override
@@ -138,6 +208,7 @@ public class DragLayout extends FrameLayout {
         mLiftContent = (ViewGroup) getChildAt(0);
         mMainContent = (ViewGroup) getChildAt(1);
 
+
     }
 
     @Override
@@ -164,5 +235,15 @@ public class DragLayout extends FrameLayout {
             return mRange;
         }
         return left;
+    }
+
+    @Override
+    public void computeScroll() {
+        //持续平滑动画
+        if (mDragHelper.continueSettling(true)){
+            //如果返回 true 动画还需要继续执行
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+
     }
 }
