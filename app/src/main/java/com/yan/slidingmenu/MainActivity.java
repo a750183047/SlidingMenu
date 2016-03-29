@@ -1,12 +1,14 @@
 package com.yan.slidingmenu;
 
 import android.graphics.Color;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,12 +21,42 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String[] setting = {"set1","set2","set3","set4","set5","set6","set7","set8","set9","set10","set11","set12",
     "set13","set14"};
+    private ImageView mHead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mHead = (ImageView) findViewById(R.id.head);
+
+        leftContentInit();
+
+        mDragLayout = (DragLayout) findViewById(R.id.drag);
+        mDragLayout.setDragStatusListener(new DragLayout.OnDragStatusChangeListener() {
+            @Override
+            public void onClose() {
+
+            }
+
+            @Override
+            public void onOpen() {
+
+            }
+
+            @Override
+            public void onDraging(float percent) {
+                mHead.setAlpha(1-percent);
+            }
+        });
+
+
+
+
+
+    }
+
+    private void leftContentInit() {
         mLeftList = (ListView) findViewById(R.id.left_list);
         mLeftList.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,setting){
@@ -41,11 +73,8 @@ public class MainActivity extends AppCompatActivity {
         mLeftList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Utils.showToast(MainActivity.this,"position"+position);
+                Utils.showToast(MainActivity.this, "position" + position);
             }
         });
-
-
-
     }
 }
